@@ -1,14 +1,18 @@
 #!/bin/bash
 
+
 printf "\n\nCompare to reference files ... \n\n";
 FAIL=0
 RUN=0
+#RISCV_ISA="rv32i"
+#ROOTDIR='pwd'
 
-for ref in ${SUITEDIR}/references/*.reference_output;
+
+for ref in ${ROOTDIR}/work/${RISCV_ISA}/*.reference_output_n;
 do 
     base=$(basename ${ref})
-    stub=${base//".reference_output"/}
-    sig=${WORK}/${RISCV_ISA}/${stub}.signature.output
+    stub=${base//".reference_output_n"/}
+    sig=${ROOTDIR}/work/${RISCV_ISA}/bin_log/${stub}.signature_output
 
     RUN=$((${RUN} + 1))
     
@@ -32,11 +36,11 @@ do
 done
 
 # warn on missing reverse reference
-for sig in ${WORK}/${RISCV_ISA}/*.signature.output; 
+for sig in ${ROOTDIR}/work/${RISCV_ISA}/bin_log/*.signature_output; 
 do
     base=$(basename ${sig})
-    stub=${base//".signature.output"/}
-    ref=${SUITEDIR}/references/${stub}.reference_output
+    stub=${base//".signature_output"/}
+    ref=${ROOTDIR}/work/${RISCV_ISA}/${stub}.reference_output_n
 
     if [ -f $sig ] && [ ! -f ${ref} ]; then
         echo "Error: sig ${sig} no corresponding ${ref}"
@@ -54,6 +58,6 @@ else
     echo -n "FAIL: ${FAIL}/${RUN} "
     status=1
 fi
-echo "RISCV_TARGET=${RISCV_TARGET} RISCV_DEVICE=${RISCV_DEVICE} RISCV_ISA=${RISCV_ISA}"
+#echo "RISCV_TARGET=${RISCV_TARGET} RISCV_DEVICE=${RISCV_DEVICE} RISCV_ISA=${RISCV_ISA}"
 echo
 exit ${status}

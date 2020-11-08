@@ -1,0 +1,13 @@
+/home/tjz/work/XiangShan/compliance-tests/riscv-test-env/verify.sh
+
+
+Compare to reference files ... 
+
+Check                     DIVW ... OK
+Check                     MULW ... OK
+Check                    REMUW ... OK
+Check                     REMW ... OK
+--------------------------------
+OK: 4/4 
+echo -e 'rv64im /home/tjz/work/XiangShan/compliance-tests'
+rv64im /home/tjz/work/XiangShan/compliance-tests

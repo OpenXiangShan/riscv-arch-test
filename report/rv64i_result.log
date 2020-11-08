@@ -1,0 +1,18 @@
+/home/tjz/work/XiangShan/compliance-tests/riscv-test-env/verify.sh
+
+
+Compare to reference files ... 
+
+Check                    ADDIW ... OK
+Check                     ADDW ... OK
+Check                    SLLIW ... OK
+Check                     SLLW ... OK
+Check                    SRAIW ... OK
+Check                     SRAW ... OK
+Check                    SRLIW ... OK
+Check                     SRLW ... OK
+Check                     SUBW ... OK
+--------------------------------
+OK: 9/9 
+echo -e 'rv64i /home/tjz/work/XiangShan/compliance-tests'
+rv64i /home/tjz/work/XiangShan/compliance-tests

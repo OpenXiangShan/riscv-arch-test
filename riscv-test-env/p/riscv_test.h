@@ -211,11 +211,28 @@ end_testcode:                                                           \
 #define RVTEST_SYNC fence
 //#define RVTEST_SYNC nop
 
-#define RVTEST_PASS                                                     \
+#define RVTEST_PASS                                                   \
         RVTEST_SYNC;                                                    \
         li TESTNUM, 1;                                                  \
         SWSIG (0, TESTNUM);                                             \
+	beqz TESTNUM, 1b;                                               \
+        sll TESTNUM, TESTNUM, 1;                                        \
+        or TESTNUM, TESTNUM, 1;                                         \
+        SWSIG (0, TESTNUM);                                             \
+        la x1, end_testcode;                                            \
+        jr x1;                                                          \
         ecall
+
+//#define RVTEST_PASS                                                     \
+	RVTEST_SYNC;                                                    \
+	addi    sp,sp,-16;                                               \
+	sd      ra,8(sp);                                        \
+	mv      a1,a0;                                         \
+	mv      a0,a0;                                             \
+	0x5006b;                                            \
+	auipc   a0,0x1;                                                  \
+	addi    a0,a0,-1188 # 80000bf0 <strlen+0x34>;                 \
+	j       800000a0 <_halt+0x20>
 
 #define TESTNUM gp
 #define RVTEST_FAIL                                                     \
