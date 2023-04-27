@@ -9,3 +9,6 @@
 *.DS_Store
 
 riscv-target/
+
+riscv-test-suite/build
+
