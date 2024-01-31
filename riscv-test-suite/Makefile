@@ -1,8 +1,9 @@
 CROSS         = riscv64-unknown-linux-gnu-
 CROSS_CC      = $(CROSS)gcc
+RISCV_ARCH    = rv64gc_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zknd_zkne_zknh_zksed_zksh
 CROSS_CFLAGS  = -Wl,--entry=rvtest_entry_point,-Ttext=0x80000000 \
 				-nostartfiles -static -I./env -DTEST_CASE_1      \
-				-march=rv64gc_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zknd_zkne_zknh_zksed_zksh
+				-march=$(RISCV_ARCH)
 CROSS_OBJCOPY = $(CROSS)objcopy
 CROSS_OBJDUMP = $(CROSS)objdump
 
@@ -24,24 +25,27 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 
+SECTIONS = .text .data .got
+SECTIONS_FLAGS = $(addprefix --only-section=, $(SECTIONS))
+
 define cmd_template
 TESTS_SRC_$(1) := $$(shell find $(SRC_DIR)/$(1)/src -maxdepth 1 -name '*.S')
 SRC_NAMES_$(1) := $$(basename $$(notdir $$(TESTS_SRC_$(1))))
 TARGETS_$(1)   := $$(addprefix $$(BUILD_DIR)/$(1)-,$$(SRC_NAMES_$(1)))
 BINARY_$(1)    := $$(addsuffix .bin,$$(TARGETS_$(1)))
-OBJUDMP_$(1)   := $$(addsuffix .txt,$$(TARGETS_$(1)))
+OBJDUMP_$(1)   := $$(addsuffix .txt,$$(TARGETS_$(1)))
 
 $(BUILD_DIR)/$(1)-%.elf: $(SRC_DIR)/$(1)/src/%.S $(INCLUDES)
 	$(CROSS_CC) $(CROSS_CFLAGS) -o $$@ $$<
 .PRECIOUS: $(BUILD_DIR)/$(1)-%.elf
 
 $(BUILD_DIR)/$(1)-%.bin: $(BUILD_DIR)/$(1)-%.elf
-	$(CROSS_OBJCOPY) -O binary $$< $$@
+	$(CROSS_OBJCOPY) -S -O binary $(SECTIONS_FLAGS) $$< $$@
 
 $(BUILD_DIR)/$(1)-%.txt: $(BUILD_DIR)/$(1)-%.elf
 	$(CROSS_OBJDUMP) -d $$< > $$@
 
-build_$(1): $$(BINARY_$(1)) $$(OBJUDMP_$(1))
+build_$(1): $(BUILD_DIR) $$(BINARY_$(1)) $$(OBJDUMP_$(1))
 
 endef
 
