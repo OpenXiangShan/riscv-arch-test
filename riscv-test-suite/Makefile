@@ -25,8 +25,10 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 
+ifeq ($(CROSS),riscv64-linux-gnu-)
 SECTIONS = .text .data .got
 SECTIONS_FLAGS = $(addprefix --only-section=, $(SECTIONS))
+endif
 
 define cmd_template
 TESTS_SRC_$(1) := $$(shell find $(SRC_DIR)/$(1)/src -maxdepth 1 -name '*.S')
