@@ -1,6 +1,6 @@
 CROSS         = riscv64-unknown-linux-gnu-
 CROSS_CC      = $(CROSS)gcc
-RISCV_ARCH    = rv64gc_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zknd_zkne_zknh_zksed_zksh
+RISCV_ARCH    = rv64gc_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zcb_zknd_zkne_zknh_zksed_zksh
 CROSS_CFLAGS  = -Wl,--entry=rvtest_entry_point,-Ttext=0x80000000 \
 				-nostartfiles -static -I./env -DTEST_CASE_1      \
 				-march=$(RISCV_ARCH)
